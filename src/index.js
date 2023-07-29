@@ -6,12 +6,11 @@ import './index.css';
 import store from './redux/store';
 import { BrowserRouter } from 'react-router-dom';
 
-
 ReactDOM.render( 
   <React.StrictMode>
     <Provider store={store}>
-    <BrowserRouter basename="/">
-      <AppRouter /> 
+      <BrowserRouter basename="/goit-react-hw-08-phonebook">
+        <AppRouter /> 
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,

@@ -9,20 +9,15 @@ import { RestrictedRoute } from '../RestrictedRoute';
 
 const AppRouter = () => {
   return (
-      <div>
-        <Header />
-        <Routes>
-          <Route path="/login" element={<RestrictedRoute redirectTo="/goit-react-hw-08-phonebook" component={<Login />} />} />
-          <Route path="/registration" element={<RestrictedRoute redirectTo="/goit-react-hw-08-phonebook" component={<Registration />} />} />
-          <Route path="/goit-react-hw-08-phonebook" element={<PrivateRoute redirectTo="/login" component={<App />} />} />
-        </Routes>
-      </div>
+    <div>
+      <Header />
+      <Routes>
+        <Route path="/login" element={<RestrictedRoute redirectTo="/*" component={<Login />} />} />
+        <Route path="/registration" element={<RestrictedRoute redirectTo="/*" component={<Registration />} />} />
+        <Route path="/*" element={<PrivateRoute redirectTo="/login" component={<App />} />} />
+      </Routes>
+    </div>
   );
 };
 
 export default AppRouter;
-
-
-
-     
-    
