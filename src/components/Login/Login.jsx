@@ -1,74 +1,43 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/user/userAction';
+import { useNavigate } from 'react-router-dom';
+import { logIn } from '../../redux/auth/operations';
 
-const Login = () => {
+const LoginForm = () => {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch('/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const userData = { email, password }; 
-        dispatch(loginUser(userData));
-        console.log('Login successful!');
-      } else {
-        console.error('Login failed.');
+      const result = await dispatch(logIn(formData));
+      if (result.error) {
+        throw new Error('Login failed');
       }
+      navigate('/goit-react-hw-08-phonebook'); 
     } catch (error) {
-      console.error('Error during login:', error);
+      alert('Login error: ' + error.message); 
     }
   };
 
   return (
-    <div style={{ maxWidth: '300px', margin: 'auto' }}>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input type="email" name="email" placeholder="Email" onChange={handleChange} />
+      <input type="password" name="password" placeholder="Password" onChange={handleChange} />
+      <button type="submit">Log In</button>
+    </form>
   );
 };
 
-export default Login;
+export default LoginForm;

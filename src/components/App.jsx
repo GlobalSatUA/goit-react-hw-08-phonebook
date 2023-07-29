@@ -1,7 +1,7 @@
-// App.jsx
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact, deleteContact, updateFilter, fetchContacts } from '../redux/contactsSlice';
+import { selectToken } from '../redux/auth/slice'; 
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
@@ -11,6 +11,7 @@ const App = () => {
   const contacts = useSelector((state) => state.contacts.contacts);
   const filter = useSelector((state) => state.contacts.filter);
   const dispatch = useDispatch();
+  const token = useSelector(selectToken); 
 
   useEffect(() => {
     if (!isContactsLoaded) {
@@ -23,7 +24,6 @@ const App = () => {
         });
     }
   }, [dispatch, isContactsLoaded]);
-  
 
   const handleAddContact = (name, number) => {
     const newContact = {
@@ -31,10 +31,11 @@ const App = () => {
       number: number,
     };
 
-    fetch('https://connections-api.herokuapp.com​/contacts', {
+    fetch('https://connections-api.herokuapp.com/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(newContact),
     })
@@ -47,43 +48,44 @@ const App = () => {
         console.error('Error saving contact to the server:', error);
       });
   };
-  
-const handleDeleteContact = (id) => {
 
-  fetch(`https://connections-api.herokuapp.com​/contacts/${id}`, {
-    method: 'DELETE',
-  })
-  .then((response) => {
-    if (response.ok) {
-      dispatch(deleteContact(id));
-    } else {
-      console.error('Failed to delete contact from server');
-    }
-  })
-  .catch((error) => {
-    console.error('Error deleting contact from server:', error);
-  });
-};
+  const handleDeleteContact = (id) => {
+    fetch(`https://connections-api.herokuapp.com/contacts/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`, 
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          dispatch(deleteContact(id));
+        } else {
+          console.error('Failed to delete contact from server');
+        }
+      })
+      .catch((error) => {
+        console.error('Error deleting contact from server:', error);
+      });
+  };
 
+  const handleFilterChange = (event) => {
+    dispatch(updateFilter(event.target.value));
+  };
 
-const handleFilterChange = (event) => {
-  dispatch(updateFilter(event.target.value));
-};
+  const filteredContacts = filter
+    ? contacts.filter((contact) => contact.name.toLowerCase().includes(filter.toLowerCase()))
+    : contacts;
 
-const filteredContacts = filter
-  ? contacts.filter((contact) => contact.name.toLowerCase().includes(filter.toLowerCase()))
-  : contacts;
+  return (
+    <div style={{ maxWidth: '250px', padding: '20px' }}>
+      <h1 style={{ marginBottom: '20px' }}>Phonebook</h1>
+      <ContactForm contacts={contacts} onAddContact={handleAddContact} />
 
-return (
-  <div style={{ maxWidth: '250px', padding: '20px' }}>
-    <h1 style={{ marginBottom: '20px' }}>Phonebook</h1>
-    <ContactForm contacts={contacts} onAddContact={handleAddContact} />
-
-    <h2 style={{ marginTop: '40px' }}>Contacts</h2>
-    <Filter value={filter} onChange={handleFilterChange} />
-    <ContactList contacts={filteredContacts} onDeleteContact={handleDeleteContact} />
-  </div>
-);
+      <h2 style={{ marginTop: '40px' }}>Contacts</h2>
+      <Filter value={filter} onChange={handleFilterChange} />
+      <ContactList contacts={filteredContacts} onDeleteContact={handleDeleteContact} />
+    </div>
+  );
 };
 
 export default App;

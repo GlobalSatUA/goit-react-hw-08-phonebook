@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { contactsReducer } from '../redux/contactsSlice';
-import { registrationReducer } from '../redux/user/userReducer';
+import { authReducer } from '../redux/auth/slice';
 
 const store = configureStore({
   reducer: {
+    auth: authReducer,
     contacts: contactsReducer,
-    registration: registrationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

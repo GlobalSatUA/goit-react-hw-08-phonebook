@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import UserMenu from '../UserMenu/UserMenu'; 
+import { useSelector } from 'react-redux';
+import UserMenu from '../UserMenu/UserMenu';
 
 const Header = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const handleUserMenuOpen = () => {
     setIsUserMenuOpen(true);
@@ -19,12 +21,16 @@ const Header = () => {
         <Link to="/goit-react-hw-08-phonebook">Contacts</Link>
       </div>
       <div>
-        <Link to="/login">Login</Link>
-        <Link to="/registration" style={{ marginLeft: '10px' }}>Registration</Link>
-        <button onClick={handleUserMenuOpen} style={{ marginLeft: '10px' }}>User Menu</button>
+        {!isLoggedIn ? (
+          <>
+            <Link to="/login">Login</Link>
+            <Link to="/registration" style={{ marginLeft: '10px' }}>Registration</Link>
+          </>
+        ) : (
+          <button onClick={handleUserMenuOpen} style={{ marginLeft: '10px' }}>User Menu</button>
+        )}
       </div>
 
-      {/* UserMenu as a modal */}
       {isUserMenuOpen && (
         <div
           style={{
@@ -40,7 +46,7 @@ const Header = () => {
           }}
         >
           <div style={{ padding: '20px', background: 'white' }}>
-            <UserMenu />
+            <UserMenu onClose={handleUserMenuClose} />
             <button onClick={handleUserMenuClose}>Close</button>
           </div>
         </div>

@@ -1,7 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { selectToken } from '../redux/auth/slice'; 
 
-export const fetchContacts = createAsyncThunk('contacts/fetchContacts', async () => {
-  const response = await fetch('https://64bb9b397b33a35a444682bc.mockapi.io/contacts/contacts');
+export const fetchContacts = createAsyncThunk('contacts/fetchContacts', async (_, { getState }) => {
+  const token = selectToken(getState()); 
+  const response = await fetch('https://connections-api.herokuapp.com/contacts', {
+    headers: {
+      Authorization: `Bearer ${token}`, 
+    },
+  });
   const data = await response.json();
   return data;
 });
@@ -24,6 +30,9 @@ const contactsSlice = createSlice({
     updateFilter: (state, action) => {
       state.filter = action.payload;
     },
+    clearContacts(state) {
+      state.splice(0, state.length);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -43,6 +52,7 @@ const contactsSlice = createSlice({
   },
 });
 
-export const { addContact, deleteContact, updateFilter } = contactsSlice.actions;
+export const { addContact, deleteContact, updateFilter, clearContacts } = contactsSlice.actions;
 
 export const contactsReducer = contactsSlice.reducer;
+
