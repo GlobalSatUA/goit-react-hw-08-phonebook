@@ -31,7 +31,7 @@ const contactsSlice = createSlice({
       state.filter = action.payload;
     },
     clearContacts(state) {
-      state.splice(0, state.length);
+      state.contacts = [];
     },
   },
   extraReducers: (builder) => {
