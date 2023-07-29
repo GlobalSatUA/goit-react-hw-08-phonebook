@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import App from '../App';
 import Login from '../Login/Login';
 import Registration from '../Registration/Registration';
@@ -9,7 +9,6 @@ import { RestrictedRoute } from '../RestrictedRoute';
 
 const AppRouter = () => {
   return (
-    <Router>
       <div>
         <Header />
         <Routes>
@@ -18,8 +17,12 @@ const AppRouter = () => {
           <Route path="/goit-react-hw-08-phonebook" element={<PrivateRoute redirectTo="/login" component={<App />} />} />
         </Routes>
       </div>
-    </Router>
   );
 };
 
 export default AppRouter;
+
+
+
+     
+    
