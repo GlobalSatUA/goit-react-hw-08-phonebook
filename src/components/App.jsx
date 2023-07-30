@@ -5,6 +5,8 @@ import { selectToken } from '../redux/auth/slice';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 
 const App = () => {
   const [isContactsLoaded, setIsContactsLoaded] = useState(false);
@@ -77,14 +79,18 @@ const App = () => {
     : contacts;
 
   return (
-    <div style={{ maxWidth: '250px', padding: '20px' }}>
-      <h1 style={{ marginBottom: '20px' }}>Phonebook</h1>
+    <Container maxWidth="sm" style={{ padding: '20px' }}>
+      <Typography variant="h4" gutterBottom>
+        Phonebook
+      </Typography>
       <ContactForm contacts={contacts} onAddContact={handleAddContact} />
 
-      <h2 style={{ marginTop: '40px' }}>Contacts</h2>
+      <Typography variant="h5" style={{ marginTop: '40px' }} gutterBottom>
+        Contacts
+      </Typography>
       <Filter value={filter} onChange={handleFilterChange} />
       <ContactList contacts={filteredContacts} onDeleteContact={handleDeleteContact} />
-    </div>
+    </Container>
   );
 };
 

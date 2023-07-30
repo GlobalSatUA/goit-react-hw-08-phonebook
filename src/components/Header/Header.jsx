@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import UserMenu from '../UserMenu/UserMenu';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
 
 const Header = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -16,44 +19,53 @@ const Header = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', backgroundColor: '#f0f0f0' }}>
-      <div>
-        <Link to="/goit-react-hw-08-phonebook">Contacts</Link>
-      </div>
-      <div>
-        {!isLoggedIn ? (
-          <>
-            <Link to="/login">Login</Link>
-            <Link to="/registration" style={{ marginLeft: '10px' }}>Registration</Link>
-          </>
-        ) : (
-          <button onClick={handleUserMenuOpen} style={{ marginLeft: '10px' }}>User Menu</button>
-        )}
-      </div>
-
-      {isUserMenuOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.3)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ padding: '20px', background: 'white' }}>
-            <UserMenu onClose={handleUserMenuClose} />
-            <button onClick={handleUserMenuClose}>Close</button>
-          </div>
+    <AppBar position="static" color="default">
+      <Toolbar>
+        <div>
+          <Button component={Link} to="/goit-react-hw-08-phonebook" color="inherit">
+            Contacts
+          </Button>
         </div>
-      )}
-    </div>
+        <div style={{ marginLeft: 'auto' }}>
+          {!isLoggedIn ? (
+            <>
+              <Button component={Link} to="/login" color="inherit">
+                Login
+              </Button>
+              <Button component={Link} to="/registration" color="inherit" sx={{ marginLeft: '10px' }}>
+                Registration
+              </Button>
+            </>
+          ) : (
+            <Button onClick={handleUserMenuOpen} color="inherit" sx={{ marginLeft: '10px' }}>
+              User Menu
+            </Button>
+          )}
+        </div>
+
+        {isUserMenuOpen && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'rgba(0, 0, 0, 0.3)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 9999,
+            }}
+          >
+            <div>
+              <UserMenu onClose={handleUserMenuClose} />
+            </div>
+          </div>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };
 
 export default Header;
-

@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/auth/operations';
 import { useNavigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 const RegistrationForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,19 +29,46 @@ const RegistrationForm = () => {
       if (result.error) {
         throw new Error('Register failed');
       }
-      navigate('/goit-react-hw-08-phonebook'); 
+      navigate('/goit-react-hw-08-phonebook');
     } catch (error) {
-      alert('Register error: ' + error.message); 
+      alert('Register error: ' + error.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="name" placeholder="Name" onChange={handleChange} />
-      <input type="email" name="email" placeholder="Email" onChange={handleChange} />
-      <input type="password" name="password" placeholder="Password" onChange={handleChange} />
-      <button type="submit">Register</button>
-    </form>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+      <form onSubmit={handleSubmit}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <TextField
+            type="text"
+            name="name"
+            label="Name"
+            variant="outlined"
+            onChange={handleChange}
+            value={formData.name}
+          />
+          <TextField
+            type="email"
+            name="email"
+            label="Email"
+            variant="outlined"
+            onChange={handleChange}
+            value={formData.email}
+          />
+          <TextField
+            type="password"
+            name="password"
+            label="Password"
+            variant="outlined"
+            onChange={handleChange}
+            value={formData.password}
+          />
+          <Button type="submit" variant="contained" color="primary">
+            Register
+          </Button>
+        </Box>
+      </form>
+    </div>
   );
 };
 
